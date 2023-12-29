@@ -9,20 +9,6 @@ exports.create = async (db, collection, data) => {
 
 exports.findOne = async (db, collection) => {
   const connection = await mongodb.connect(DATABASE_URL);
-  console.log(
-    "____________________________________________________________________________________"
-  );
-  console.log(DATABASE_URL);
-  console.log(
-    "____________________________________________________________________________________"
-  );
-  console.log(
-    "____________________________________________________________________________________"
-  );
-  console.log(connection);
-  console.log(
-    "____________________________________________________________________________________"
-  );
   //   Do stuff
   await connection.close();
 };
