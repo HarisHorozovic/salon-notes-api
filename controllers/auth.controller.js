@@ -1,16 +1,16 @@
-const { find, create } = require("../db");
+const { create, findOne } = require("../db");
 const { encrypt, compareHash, base64Encode } = require("../utils");
 exports.signup = async (req, res) => {
   try {
     const { email, password } = req.body;
     const hashed = await encrypt(password);
 
-    await create("app_users", "users", {
+    const user = await create("app_users", "users", {
       email,
       password: hashed,
     });
 
-    const token = base64Encode(email);
+    const token = base64Encode(`${user.insertedId}_${email}`);
 
     res.status(200).json({ message: "logged in", token });
   } catch (e) {
@@ -22,7 +22,7 @@ exports.signup = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-  const user = await find("app_users", "users", { email: email });
+  const user = await findOne("app_users", "users", { email: email });
 
   if (!user) {
     return res
@@ -38,6 +38,6 @@ exports.login = async (req, res) => {
       .json({ message: "Email or password are incorrect!" });
   }
 
-  const token = base64Encode(user.email);
+  const token = base64Encode(`${user.id}_${user.email}`);
   res.status(200).json({ message: "logged in", token });
 };

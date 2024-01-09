@@ -17,13 +17,7 @@ exports.create = async (db, collection, data) => {
   }
 };
 
-exports.findOne = async (db, collection) => {
-  const connection = await mongodb.connect(DATABASE_URL);
-  //   Do stuff
-  await connection.close();
-};
-
-exports.find = async (db, collection, query) => {
+exports.findOne = async (db, collection, query) => {
   try {
     const connection = await mongodb.connect(DATABASE_URL);
     //   Do stuff
@@ -33,6 +27,29 @@ exports.find = async (db, collection, query) => {
       .find(query)
       .toArray();
     return result ? result[0] : null;
+  } catch (e) {
+    console.log(
+      "____________________________________________________________________________________"
+    );
+    console.log("dberror", e);
+    console.log(
+      "____________________________________________________________________________________"
+    );
+  }
+};
+
+exports.find = async ({ db, collection, query, page = 1, perPage = 10 }) => {
+  try {
+    const connection = await mongodb.connect(DATABASE_URL);
+    //   Do stuff
+    const result = await connection
+      .db(db)
+      .collection(collection)
+      .find(query)
+      .skip(page ? (page - 1) * perPage : undefined)
+      .limit(perPage ? perPage : undefined)
+      .toArray();
+    return result;
   } catch (e) {
     console.log(
       "____________________________________________________________________________________"

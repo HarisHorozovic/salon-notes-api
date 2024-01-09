@@ -1,11 +1,17 @@
+const { base64Decode } = require("../utils");
 exports.authInterceptor = (req, res, next) => {
-  console.log(
-    "____________________________________________________________________________________"
-  );
-  console.log("Check auth headers and add user to req");
-  console.log(
-    "____________________________________________________________________________________"
-  );
+  const { authorization } = req.headers;
 
-  next();
+  if (authorization) {
+    const token = authorization.split(" ")[1];
+    if (token) {
+      const decoded = base64Decode(token);
+      if (decoded) {
+        req.user = { id: decoded.split("_")[0], email: decoded.split("_")[1] };
+
+        return next();
+      }
+    }
+  }
+  return res.status(401).json({ message: "Unauthorized" });
 };
