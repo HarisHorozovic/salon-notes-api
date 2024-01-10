@@ -38,6 +38,6 @@ exports.login = async (req, res) => {
       .json({ message: "Email or password are incorrect!" });
   }
 
-  const token = base64Encode(`${user.id}_${user.email}`);
+  const token = base64Encode(`${user._id}_${user.email}`);
   res.status(200).json({ message: "logged in", token });
 };
