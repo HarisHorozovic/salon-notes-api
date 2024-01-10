@@ -15,9 +15,16 @@ exports.createNote = async (req, res) => {
 exports.getNotes = async (req, res) => {
   try {
     const { id } = req.user;
-    const { page, perPage } = req.query;
+    const { page, perPage, search } = req.query;
 
-    const items = await find({ db: id, collection: "notes", page, perPage });
+    const regex = new RegExp(search, "i");
+    const items = await find({
+      db: id,
+      collection: "notes",
+      page,
+      perPage,
+      query: search ? { title: { $regex: regex } } : undefined,
+    });
 
     return res.status(200).json({ items });
   } catch (e) {
