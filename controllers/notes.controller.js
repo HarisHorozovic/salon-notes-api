@@ -1,9 +1,16 @@
 const { find, create } = require("../db");
 exports.createNote = async (req, res) => {
-  const { id } = req.user;
-  const { body } = req;
+  try {
+    const { id } = req.user;
+    const { body } = req;
 
-  return await create(id, "notes", body);
+    await create(id, "notes", body);
+    return res.status(200).json({ message: "Note created" });
+  } catch (e) {
+    return res
+      .status(e.statusCode || 400)
+      .json({ message: e.message || "Something went wrong" });
+  }
 };
 exports.getNotes = async (req, res) => {
   try {
