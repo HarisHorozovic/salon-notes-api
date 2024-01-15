@@ -11,11 +11,11 @@ exports.create = async (db, collection, data) => {
       .insertOne({ ...data, created_at: new Date(), updated_at: new Date() });
   } catch (e) {
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
     console.log("dberror", e);
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
   }
 };
@@ -32,11 +32,11 @@ exports.findOne = async (db, collection, query) => {
     return result ? result[0] : null;
   } catch (e) {
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
     console.log("dberror", e);
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
   }
 };
@@ -56,23 +56,54 @@ exports.find = async ({ db, collection, query, page = 1, perPage = 10 }) => {
     return result;
   } catch (e) {
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
     console.log("dberror", e);
     console.log(
-      "____________________________________________________________________________________"
+      "____________________________________________________________________________________",
     );
   }
 };
 
 exports.update = async (db, collection, query, data) => {
-  const connection = await mongodb.connect(DATABASE_URL);
-  //   Do stuff
-  await connection.close();
+  try {
+    const connection = await mongodb.connect(DATABASE_URL);
+    //   Do stuff
+    const result = await connection
+      .db(db)
+      .collection(collection)
+      .updateOne(query, data);
+    return true;
+  } catch (e) {
+    console.log(
+      "____________________________________________________________________________________",
+    );
+    console.log("dberror", e);
+    console.log(
+      "____________________________________________________________________________________",
+    );
+    throw e;
+  }
 };
 
-exports.delete = async (db, collection, query) => {
-  const connection = await mongodb.connect(DATABASE_URL);
-  //   Do stuff
-  await connection.close();
+exports.db_delete = async (db, collection, query) => {
+  try {
+    const connection = await mongodb.connect(DATABASE_URL);
+    //   Do stuff
+    const result = await connection
+      .db(db)
+      .collection(collection)
+      .deleteOne(query);
+
+    return true;
+  } catch (e) {
+    console.log(
+      "____________________________________________________________________________________",
+    );
+    console.log("dberror", e);
+    console.log(
+      "____________________________________________________________________________________",
+    );
+    throw e;
+  }
 };
