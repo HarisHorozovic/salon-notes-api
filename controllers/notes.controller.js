@@ -60,6 +60,7 @@ exports.deleteNote = async (req, res) => {
     const { id } = req.query;
 
     await db_delete(user.id, "notes", { id });
+    return res.status(200).json({ message: "Note deleted successfully" });
   } catch (error) {
     return res
       .status(error.statusCode || 400)
