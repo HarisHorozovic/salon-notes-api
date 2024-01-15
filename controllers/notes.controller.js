@@ -57,9 +57,10 @@ exports.updateNote = async (req, res) => {
 exports.deleteNote = async (req, res) => {
   try {
     const { user } = req;
-    const { id } = req.query;
+    const { id } = req.params;
 
-    await db_delete(user.id, "notes", { id });
+    await db_delete(user.id, "notes", { _id: id });
+
     return res.status(200).json({ message: "Note deleted successfully" });
   } catch (error) {
     return res
