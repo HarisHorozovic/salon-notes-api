@@ -1,4 +1,5 @@
 const { find, create, db_delete, update } = require("../db");
+const { ObjectId } = require("mongodb");
 exports.createNote = async (req, res) => {
   try {
     const { id } = req.user;
@@ -43,7 +44,7 @@ exports.updateNote = async (req, res) => {
     await update(
       id,
       "notes",
-      { _id: _id },
+      { _id: new ObjectId(_id) },
       { $set: { ...updateObject, updated_at: new Date() } },
     );
 
@@ -59,7 +60,7 @@ exports.deleteNote = async (req, res) => {
     const { user } = req;
     const { id } = req.params;
 
-    await db_delete(user.id, "notes", { _id: id });
+    await db_delete(user.id, "notes", { _id: new ObjectId(id) });
 
     return res.status(200).json({ message: "Note deleted successfully" });
   } catch (error) {
