@@ -5,6 +5,14 @@ exports.signup = async (req, res) => {
     const { email, password } = req.body;
     const hashed = await encrypt(password);
 
+    const existing = await findOne("app_users", "users", { email });
+
+    if (existing) {
+      return res
+        .status(400)
+        .json({ message: "User with that email already exists" });
+    }
+
     const user = await create("app_users", "users", {
       email,
       password: hashed,
